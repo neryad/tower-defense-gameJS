@@ -5,6 +5,25 @@ canvas.width = 1280;
 canvas.height = 728;
 context.fillStyle = 'black';
 context.fillRect(0, 0, canvas.width, canvas.height);
+
+const placementData2D = [];
+for (let i = 0; i < placementsData.length; i += 80) {
+  placementData2D.push(placementsData.slice(i, i + 80));
+
+}
+
+const placementTiles = [];
+
+
+placementData2D.forEach((row, y) => {
+  row.forEach((symbol, x) => {
+    if (symbol === 18) {
+      //agregar soldier
+      placementTiles.push(new PlacementsTile({ position: { x: x * 16, y: y * 16 } }))
+    }
+  })
+})
+
 const image = new Image();
 image.onload = () => {
 
@@ -13,55 +32,57 @@ image.onload = () => {
 }
 image.src = './assets/map.png';
 
-//TODO: poner en un archivo aparte
-class Enemy {
 
-  constructor({ position = { x: 0, y: 0 } }) {
-    this.position = position
-    this.width = 25
-    this.height = 25
-    this.waypointIndex = 0
-    this.center = {
-      x: this.position.x + this.width / 2,
-      y: this.position.y + this.height / 2,
-    }
-  }
 
-  draw() {
-    context.fillStyle = 'red'
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
-  }
-
-  update() {
-    this.draw();
-
-    const waypoint = waypoints[this.waypointIndex];
-    const yDistance = waypoint.y - this.center.y
-    const xDistance = waypoint.x - this.center.x
-    const angle = Math.atan2(yDistance, xDistance);
-    this.position.x += Math.cos(angle);
-    this.position.y += Math.sin(angle);
-    this.center = {
-      x: this.position.x + this.width / 2,
-      y: this.position.y + this.height / 2,
-    }
-    if (Math.round(this.center.x) === Math.round(waypoint.x) && Math.round(this.center.y) === Math.round(waypoint.y) && this.waypointIndex < waypoints.length - 1) {
-      this.waypointIndex++;
-    }
-  }
-
-}
 const enemy = new Enemy({ position: { x: waypoints[0].x, y: waypoints[0].y } });
 const enemy2 = new Enemy({ position: { x: waypoints[0].x - 100, y: waypoints[0].y } });
+const soldiers = [];
+let activeTile;
 function animate() {
 
   requestAnimationFrame(animate);
   context.drawImage(image, 0, 0);
+  placementTiles.forEach(tile => {
+    tile.update(mouse);
+  });
+  soldiers.forEach((soldier) => {
+    soldier.draw();
+  })
   enemy.update();
   enemy2.update();
-  // context.fillStyle = 'red'
-  // context.fillRect(x, 565, 25, 25);
-  // x++;
+
 
 }
+const mouse = {
+  x: undefined,
+  y: undefined
+}
 
+canvas.addEventListener('click', (event) => {
+  if (activeTile && !activeTile.occupied  ) {
+
+    soldiers.push(new Soldier({ position: { x: activeTile.position.x, y: activeTile.position.y } })
+    )
+
+    activeTile.occupied = true
+  }
+});
+window.addEventListener('mousemove', (event) => {
+
+  mouse.x = event.clientX;
+  mouse.y = event.clientY;
+  for (let i = 0; i < placementTiles.length; i++) {
+    let tile = placementTiles[i]
+    if (
+      mouse.x > tile.position.x &&
+      mouse.x < tile.position.x + tile.size &&
+      mouse.y > tile.position.y &&
+      mouse.y < tile.position.y + tile.size
+    ) {
+      activeTile = tile;
+      break;
+    }
+
+  }
+
+})
