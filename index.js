@@ -32,10 +32,14 @@ image.onload = () => {
 }
 image.src = './assets/map.png';
 
+const enemies = [];
+for (let i = 0; i <10; i++){
+  const xOffset =  i * 150;
+  enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
+}
 
-
-const enemy = new Enemy({ position: { x: waypoints[0].x, y: waypoints[0].y } });
-const enemy2 = new Enemy({ position: { x: waypoints[0].x - 100, y: waypoints[0].y } });
+// const enemy = new Enemy({ position: { x: waypoints[0].x, y: waypoints[0].y } });
+// const enemy2 = new Enemy({ position: { x: waypoints[0].x - 100, y: waypoints[0].y } });
 const soldiers = [];
 let activeTile;
 function animate() {
@@ -46,10 +50,42 @@ function animate() {
     tile.update(mouse);
   });
   soldiers.forEach((soldier) => {
-    soldier.draw();
+    soldier.update();
+    soldier.target = null;
+    const validEnemies = enemies.filter((enemy) => {
+      const xDifference = enemy.center.x - soldier.position.x;
+      const yDifference = enemy.center.y - soldier.position.y;
+      const distance = Math.hypot(xDifference, yDifference);
+      return distance < enemy.radius + soldier.radius;
+    })
+    soldier.target = validEnemies[0];
+    // console.log(validEnemies);
+    for (let i = soldier.projectiles.length - 1; i >= 0; i--) {
+      const projectile = soldier.projectiles[i];
+      projectile.update();
+      const xDifference = projectile.enemy.center.x - projectile.position.x;
+      const yDifference = projectile.enemy.center.y - projectile.position.y;
+      const distance = Math.hypot(xDifference, yDifference);
+      if (distance < projectile.enemy.radius + projectile.radius) {
+
+        soldier.projectiles.splice(i, 1);
+      }
+    }
+    // soldier.projectiles.forEach((projectile, i) => {
+      // projectile.update();
+      // const xDifference = projectile.enemy.center.x - projectile.position.x;
+      // const yDifference = projectile.enemy.center.y - projectile.position.y;
+      // const distance = Math.hypot(xDifference, yDifference);
+      // if(distance < projectile.enemy.radius + projectile.radius){
+
+      //   soldier.projectiles.splice(i,1);
+      // }
+
+    // })
   })
+ enemies.forEach((enemy)=>{
   enemy.update();
-  enemy2.update();
+ })
 
 
 }

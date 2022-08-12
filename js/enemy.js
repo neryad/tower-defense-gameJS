@@ -9,11 +9,15 @@ class Enemy {
       x: this.position.x + this.width / 2,
       y: this.position.y + this.height / 2,
     }
+    this.radius = 20;
   }
 
   draw() {
     context.fillStyle = 'red'
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    context.beginPath();
+    context.arc(this.center.x, this.center.y,this.radius, 0 , Math.PI * 2);
+    context.fill();
   }
 
   update() {
