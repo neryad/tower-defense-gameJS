@@ -33,22 +33,32 @@ image.onload = () => {
 image.src = './assets/map.png';
 
 const enemies = [];
-for (let i = 0; i <10; i++){
-  const xOffset =  i * 150;
-  enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
-}
+let count = 6;
+let life = 5;
+// for (let i = 0; i <10; i++){
+//   const xOffset =  i * 150;
+//   enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
+// }
 
+function spawnEnemy(enemyCount){
+  for (let i = 0; i < enemyCount + 1; i++) {
+    const xOffset = i * 150;
+    enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
+  }
+}
+spawnEnemy(count);
 // const enemy = new Enemy({ position: { x: waypoints[0].x, y: waypoints[0].y } });
 // const enemy2 = new Enemy({ position: { x: waypoints[0].x - 100, y: waypoints[0].y } });
 const soldiers = [];
 let activeTile;
 function animate() {
 
-  requestAnimationFrame(animate);
+  const animationId = requestAnimationFrame(animate);
   context.drawImage(image, 0, 0);
   placementTiles.forEach(tile => {
     tile.update(mouse);
   });
+
   soldiers.forEach((soldier) => {
     soldier.update();
     soldier.target = null;
@@ -59,33 +69,55 @@ function animate() {
       return distance < enemy.radius + soldier.radius;
     })
     soldier.target = validEnemies[0];
-    // console.log(validEnemies);
+
     for (let i = soldier.projectiles.length - 1; i >= 0; i--) {
       const projectile = soldier.projectiles[i];
       projectile.update();
       const xDifference = projectile.enemy.center.x - projectile.position.x;
       const yDifference = projectile.enemy.center.y - projectile.position.y;
       const distance = Math.hypot(xDifference, yDifference);
+
       if (distance < projectile.enemy.radius + projectile.radius) {
+        //TODO: poner dinámico el daño
+        projectile.enemy.health -= 10;
+        if (projectile.enemy.health <= 0){
+
+       const indexEnemy =   enemies.findIndex((enemy)=> {
+            return projectile.enemy === enemy;
+          })
+         if(indexEnemy > -1){
+           enemies.splice(indexEnemy, 1);
+         }
+
+
+
+        }
 
         soldier.projectiles.splice(i, 1);
       }
     }
-    // soldier.projectiles.forEach((projectile, i) => {
-      // projectile.update();
-      // const xDifference = projectile.enemy.center.x - projectile.position.x;
-      // const yDifference = projectile.enemy.center.y - projectile.position.y;
-      // const distance = Math.hypot(xDifference, yDifference);
-      // if(distance < projectile.enemy.radius + projectile.radius){
 
-      //   soldier.projectiles.splice(i,1);
-      // }
-
-    // })
   })
- enemies.forEach((enemy)=>{
-  enemy.update();
- })
+
+  for (let i = enemies.length - 1; i >=0; i--) {
+    const enemy = enemies[i];
+    enemy.update();
+    if (enemy.position.x > canvas.width){
+      console.log('perdiste un corazon');
+      life -= 1;
+      enemies.splice(i , 1);
+      if(life ===0){
+        document.querySelector('.game-over').style.display = "flex";
+        console.log('game over');
+        window.cancelAnimationFrame(animationId)
+      }
+      console.log(enemies);
+    }
+  }
+  if (enemies.length === 0) {
+    count += 2;
+    spawnEnemy(count);
+  }
 
 
 }
