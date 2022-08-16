@@ -33,17 +33,25 @@ image.onload = () => {
 image.src = './assets/map.png';
 
 const enemies = [];
-let count = 6;
-let life = 5;
+let count = 0;
+let life = 10;
+let coins = 100;
+let enemySpeed = .8;
 // for (let i = 0; i <10; i++){
 //   const xOffset =  i * 150;
 //   enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
 // }
 
-function spawnEnemy(enemyCount){
+function spawnEnemy(enemyCount, speedForEnemy){
+
   for (let i = 0; i < enemyCount + 1; i++) {
-    const xOffset = i * 150;
-    enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
+    // enemySpeed +=.5;
+    let randomDistance = Math.random() * (200 - 140) + 140;
+
+    const xOffset = i * randomDistance;
+    console.log(enemySpeed, 'enemySpeed');
+    console.log(speedForEnemy, 'speedForEnemy');
+    enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y }, speed: enemySpeed }));
   }
 }
 spawnEnemy(count);
@@ -79,14 +87,21 @@ function animate() {
 
       if (distance < projectile.enemy.radius + projectile.radius) {
         //TODO: poner dinámico el daño
-        projectile.enemy.health -= 10;
+        //TODO: poner jefe en la ultima hola
+        //let damage = Math.random() * (15 - 7) +7;
+        let damage = 15.3;
+       // console.log(damage);
+        projectile.enemy.health -= damage;
         if (projectile.enemy.health <= 0){
 
        const indexEnemy =   enemies.findIndex((enemy)=> {
             return projectile.enemy === enemy;
           })
          if(indexEnemy > -1){
+          coins += 25;
+          document.querySelector('.money-count').innerHTML = coins
            enemies.splice(indexEnemy, 1);
+
          }
 
 
@@ -103,20 +118,23 @@ function animate() {
     const enemy = enemies[i];
     enemy.update();
     if (enemy.position.x > canvas.width){
-      console.log('perdiste un corazon');
+
       life -= 1;
+
+      document.querySelector('.life-count').innerHTML = life
       enemies.splice(i , 1);
       if(life ===0){
         document.querySelector('.game-over').style.display = "flex";
-        console.log('game over');
+
         window.cancelAnimationFrame(animationId)
       }
-      console.log(enemies);
+
     }
   }
   if (enemies.length === 0) {
     count += 2;
-    spawnEnemy(count);
+    enemySpeed += 0.15;
+    spawnEnemy(count, enemySpeed);
   }
 
 
@@ -127,8 +145,9 @@ const mouse = {
 }
 
 canvas.addEventListener('click', (event) => {
-  if (activeTile && !activeTile.occupied  ) {
-
+  if (activeTile && !activeTile.occupied && coins -50 >= 0 ) {
+    coins -=50;
+    document.querySelector('.money-count').innerHTML = coins;
     soldiers.push(new Soldier({ position: { x: activeTile.position.x, y: activeTile.position.y } })
     )
 

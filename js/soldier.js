@@ -11,7 +11,7 @@ class Soldier {
 
     ];
 
-    this.radius =50
+    this.radius =63
     this.target
     this.frame = 0
   }

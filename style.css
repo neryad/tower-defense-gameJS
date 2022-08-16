@@ -23,3 +23,18 @@ top: 0;
   justify-content: center;
   font-size: 60px; */
 }
+.counts{
+
+}
+.life-count, .money-count{
+position: absolute;
+top: 4px;
+right: 8px;
+font-size: 36px;
+/* color: whitesmoke; */
+display: flex;
+}
+
+.money-count{
+  right: 100px;
+}

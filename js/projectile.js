@@ -27,8 +27,9 @@ class Projectile {
       this.enemy.center.y - this.position.y,
       this.enemy.center.x - this.position.x);
       //TODO poner random o por tipo de soldado el power
-    const power = Math.random() * 10;
-
+    //const power = Math.random() * 10;
+    let power = 5.2;
+   // let power = Math.random() * (10 - 5) + 5;
       this.velocity.x = Math.cos(angle) * power;
       this.velocity.y = Math.sin(angle) * power;
       this.position.x += this.velocity.x;
