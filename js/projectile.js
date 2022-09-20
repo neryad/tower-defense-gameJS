@@ -1,6 +1,7 @@
-class Projectile {
+class Projectile extends Sprite {
 
   constructor({ position = { x: 0, y: 0 }, enemy }) {
+    super({ position, imageSrc :'../assets/projectile/projectile.png'})
 
     this.position = position;
     this.velocity = {
@@ -13,12 +14,12 @@ class Projectile {
 
   }
 
-  draw() {
-    context.beginPath();
-    context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = 'orange';
-    context.fill();
-  };
+  // draw() {
+  //   context.beginPath();
+  //   context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+  //   // context.fillStyle = '#ae00f2';
+  //   // context.fill();
+  // };
 
   update() {
     this.draw();

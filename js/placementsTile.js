@@ -3,7 +3,7 @@ class PlacementsTile {
   constructor({ position = { x: 0, y: 0 } }) {
 
     this.position = position;
-    this.size = 16;
+    this.size = 64;
     this.color = 'rgba(255,255,255,0.15)';
     this.occupied = false
   }

@@ -1,9 +1,11 @@
-class Enemy {
+class Enemy extends Sprite  {
 
-  constructor({ position = { x: 0, y: 0 }, speed }, ) {
+  constructor({ position = { x: 0, y: 0 }, speed } ) {
+
+    super({ position, imageSrc:'../assets/enemy/orc.png', frames:{max:7}});
     this.position = position
-    this.width = 25
-    this.height = 25
+    this.width = 25;
+    this.height = 25;
     this.waypointIndex = 0
     this.center = {
       x: this.position.x + this.width / 2,
@@ -19,13 +21,13 @@ class Enemy {
   }
 
   draw() {
+    super.draw();
+    // context.fillStyle = 'red'
+    // //context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    // context.beginPath();
 
-    context.fillStyle = 'red'
-    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    context.beginPath();
-
-    context.arc(this.center.x, this.center.y,this.radius, 0 , Math.PI * 2);
-    context.fill();
+    // context.arc(this.center.x, this.center.y,this.radius, 0 , Math.PI * 2);
+    // context.fill();
     context.fillStyle = 'red'
     context.fillRect(this.position.x, this.position.y - 15, this.width, 5)
     context.fillStyle='green'
@@ -34,14 +36,13 @@ class Enemy {
 
   update() {
     this.draw();
-
+    super.update()
 
     const waypoint = waypoints[this.waypointIndex];
     const yDistance = waypoint.y - this.center.y
     const xDistance = waypoint.x - this.center.x
     const angle = Math.atan2(yDistance, xDistance);
-     console.log(this.speed, 'hola jova');
-    //console.log(speed, 'speed');
+
     this.velocity.x = Math.cos(angle) * this.speed;
     this.velocity.y = Math.sin(angle) * this.speed;
 

@@ -2,13 +2,13 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
 canvas.width = 1280;
-canvas.height = 728;
+canvas.height = 768;
 context.fillStyle = 'black';
 context.fillRect(0, 0, canvas.width, canvas.height);
 
 const placementData2D = [];
-for (let i = 0; i < placementsData.length; i += 80) {
-  placementData2D.push(placementsData.slice(i, i + 80));
+for (let i = 0; i < placementsData.length; i += 20) {
+  placementData2D.push(placementsData.slice(i, i + 20));
 
 }
 
@@ -17,9 +17,9 @@ const placementTiles = [];
 
 placementData2D.forEach((row, y) => {
   row.forEach((symbol, x) => {
-    if (symbol === 18) {
+    if (symbol === 14) {
       //agregar soldier
-      placementTiles.push(new PlacementsTile({ position: { x: x * 16, y: y * 16 } }))
+      placementTiles.push(new PlacementsTile({ position: { x: x * 64, y: y * 64 } }))
     }
   })
 })
@@ -30,7 +30,7 @@ image.onload = () => {
   animate();
 
 }
-image.src = './assets/map.png';
+image.src = './assets/mapv2.png';
 
 const enemies = [];
 let count = 0;
