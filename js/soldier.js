@@ -1,7 +1,7 @@
 class Soldier extends Sprite  {
 
   constructor({ position = { x: 0, y: 0 } }) {
-    super({ position, imageSrc: '../assets/Defense/tower.png' , frames: { max: 19 }})
+    super({ position, imageSrc: '../assets/Defense/tower.png' , frames: { max: 19 }, offset:{x:-20,y:-80}})
     this.position = position
     this.size = 64;
     this.center = {
@@ -12,7 +12,7 @@ class Soldier extends Sprite  {
 
     ];
 
-    this.radius =125
+    this.radius =150
     this.target
     this.frame = 0
   }

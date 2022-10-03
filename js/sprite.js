@@ -45,7 +45,7 @@ class Sprite {
       this.frames.current++;
 
       if (this.frames.current >= this.frames.max){
-        console.log(this.frames.current, 'this.frames.current');
+
         this.frames.current = 0;
       }
     }

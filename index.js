@@ -37,24 +37,26 @@ let count = 0;
 let life = 10;
 let coins = 100;
 let enemySpeed = .8;
+let health = 100;
+let explosions = [];
 // for (let i = 0; i <10; i++){
 //   const xOffset =  i * 150;
 //   enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } }));
 // }
 
-function spawnEnemy(enemyCount, speedForEnemy){
+function spawnEnemy(enemyCount, speedForEnemy, health){
 
   for (let i = 0; i < enemyCount + 1; i++) {
     // enemySpeed +=.5;
     let randomDistance = Math.random() * (200 - 140) + 140;
 
     const xOffset = i * randomDistance;
-    console.log(enemySpeed, 'enemySpeed');
-    console.log(speedForEnemy, 'speedForEnemy');
-    enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y }, speed: enemySpeed }));
+
+    enemies.push(new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y }, speed: enemySpeed, health: health }));
+    console.log(enemies[0]);
   }
 }
-spawnEnemy(count);
+ spawnEnemy(count);
 // const enemy = new Enemy({ position: { x: waypoints[0].x, y: waypoints[0].y } });
 // const enemy2 = new Enemy({ position: { x: waypoints[0].x - 100, y: waypoints[0].y } });
 const soldiers = [];
@@ -99,7 +101,7 @@ function animate() {
           })
          if(indexEnemy > -1){
           coins += 25;
-          document.querySelector('.money-count').innerHTML = coins
+           document.querySelector('.money-count-count').innerHTML = coins
            enemies.splice(indexEnemy, 1);
 
          }
@@ -107,7 +109,12 @@ function animate() {
 
 
         }
-
+        explosions.push(new Sprite(
+          {
+            position: { x: projectile.position.x, y: projectile.position.y },
+          imageSrc:'./assets/projectile/explosion.png',
+          frames: { max: 4 },
+           offset: { x: 0, y: 0 } }))
         soldier.projectiles.splice(i, 1);
       }
     }
@@ -121,7 +128,7 @@ function animate() {
 
       life -= 1;
 
-      document.querySelector('.life-count').innerHTML = life
+      document.querySelector('.life-count-count').innerHTML = life
       enemies.splice(i , 1);
       if(life ===0){
         document.querySelector('.game-over').style.display = "flex";
@@ -131,10 +138,23 @@ function animate() {
 
     }
   }
+
+  for (let i = explosions.length - 1; i >= 0; i--) {
+    const explosion = explosions[i];
+    explosion.draw();
+    explosion.update();
+
+    if(explosion.frames.current >= explosion.frames.max - 1){
+
+      explosions.splice(i,1);
+    }
+
+  }
   if (enemies.length === 0) {
     count += 2;
     enemySpeed += 0.15;
-    spawnEnemy(count, enemySpeed);
+    health += 0.5;
+    spawnEnemy(count, enemySpeed, health);
   }
 
 

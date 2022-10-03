@@ -1,3 +1,12 @@
+body{
+      height: 95vh;
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #2E1F27;
+    color: white;
+}
 .game-over{
 position:absolute;
 top: 0;
@@ -12,16 +21,21 @@ top: 0;
 }
 
 .main-div{
-  /* display: none; */
-  position: relative;
-  /* top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 60px; */
+
+    display: flex;
+    /* height: 90vh; */
+    /* width: 90vw; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* background-color: #2E1F27; */
+    flex-direction: row-reverse;
+    height: 100%;
+    width: 100%;
+}
+canvas{
+      border: 0.2rem solid white;
+    align-items: center;
+
 }
 .counts{
 
@@ -29,12 +43,14 @@ top: 0;
 .life-count, .money-count{
 position: absolute;
 top: 4px;
-right: 8px;
+right: 3rem;
 font-size: 36px;
 /* color: whitesmoke; */
 display: flex;
 }
-
+.icons{
+ width: 2rem;
+}
 .money-count{
-  right: 100px;
+  right: 10rem;
 }
